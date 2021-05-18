@@ -1,7 +1,8 @@
 export function removeComments(sourceCode: string) {
   const newLine = "\n";
   const emptyLine = "";
-  let commentRegex = /^\/\/.*/;
+  let commentRegex =
+    /^((\/\/\s-{5,})|(\/\/\sPublic\s.+)|(\/\/\sPrivate\s.+)|(\/\/\sProtected\s.+)|(\/\/\sConstructors))/;
 
   let commentsRegex = new RegExp(commentRegex, "i");
   let lines: string[] = sourceCode.split(newLine);
@@ -48,7 +49,6 @@ export function formatLines(sourceCode: string) {
 
   for (let i = 0; i < lines.length - 1; i++) {
     if (openingBraceRegex.test(lines[i]) && emptyLineRegex.test(lines[i + 1])) {
-      // remove empty line after {
       lines.splice(i + 1, 1);
 
       i--;
@@ -56,7 +56,6 @@ export function formatLines(sourceCode: string) {
       emptyLineRegex.test(lines[i]) &&
       closingBraceRegex.test(lines[i + 1])
     ) {
-      // remove empty line before }
       lines.splice(i, 1);
 
       i--;

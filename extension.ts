@@ -84,13 +84,9 @@ function getMemberOrderConfig(): ElementNodeGroupConfiguration[] {
   let defaultMemberTypeOrder = Object.keys(MemberType) // same order as in the enum
     .filter((x) => !isNaN(parseInt(x, 10))) // do not include int value
     .map((x) => <MemberType>parseInt(x, 10));
-
-  // map member type order from configuration
   memberTypeOrderConfiguration.forEach((x: any) =>
     memberTypeOrder.push(parseElementNodeGroupConfiguration(x))
   );
-
-  // add missing member types (prevent duplicates)
   defaultMemberTypeOrder
     .filter(
       (x) =>
@@ -243,7 +239,7 @@ function print(
         members += newLine;
         members += `${
           addRegionIndentation ? Indentation : ""
-        }///////////////////////////////////////////////////////////////////`;
+        }// -------------------------------------------------------------------`;
         members += newLine;
         members += `${addRegionIndentation ? Indentation : ""}// ${
           group.caption ? `${group.caption}` : ""
@@ -251,7 +247,7 @@ function print(
         members += newLine;
         members += `${
           addRegionIndentation ? Indentation : ""
-        }///////////////////////////////////////////////////////////////////`;
+        }// -------------------------------------------------------------------`;
         members += newLine;
       }
 
@@ -370,7 +366,6 @@ function print(
           if (code.endsWith("}")) {
             members += newLine;
           } else if (node instanceof PropertyNode && node.isArrowFunction) {
-            // arrow function property -> add a new line
             members += newLine;
           }
         }
@@ -407,8 +402,6 @@ function organizeTypes(
   sourceCode = removeComments(sourceCode);
 
   let indentation = getIndentation(sourceCode);
-
-  // organize type aliases, interfaces, classes, enums, functions and variables
   let sourceFile = ts.createSourceFile(
     fileName,
     sourceCode,
@@ -478,8 +471,6 @@ function organizeTypes(
       );
     }
   }
-
-  // organize members of interfaces and classes
   sourceFile = ts.createSourceFile(
     fileName,
     sourceCode,
@@ -562,7 +553,6 @@ function organizeInterfaceMembers(
 
     for (const memberType of memberTypeGroup.memberTypes) {
       if (memberType === MemberType.publicConstProperties) {
-        // public const properties
         memberGroups.push(
           new ElementNodeGroup(
             null,
@@ -573,7 +563,6 @@ function organizeInterfaceMembers(
           )
         );
       } else if (memberType === MemberType.publicReadOnlyProperties) {
-        // public readonly methods
         memberGroups.push(
           new ElementNodeGroup(
             null,
@@ -584,7 +573,6 @@ function organizeInterfaceMembers(
           )
         );
       } else if (memberType === MemberType.publicProperties) {
-        // public methods
         memberGroups.push(
           new ElementNodeGroup(
             null,
@@ -595,7 +583,6 @@ function organizeInterfaceMembers(
           )
         );
       } else if (memberType === MemberType.publicIndexes) {
-        // public indexes
         memberGroups.push(
           new ElementNodeGroup(
             null,
@@ -606,7 +593,6 @@ function organizeInterfaceMembers(
           )
         );
       } else if (memberType === MemberType.publicMethods) {
-        // public methods
         memberGroups.push(
           new ElementNodeGroup(
             null,
